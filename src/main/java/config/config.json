@@ -1,0 +1,10 @@
+{
+  "customExtensions": [],
+  "rules": {
+    "archives": ["zip", "rar", "7z"],
+    "documents": ["pdf", "docx", "txt"],
+    "images": ["png", "jpg", "jpeg"],
+    "videos": ["mp4", "mkv"],
+    "torrents": ["torrent"]
+  }
+}
