@@ -1,0 +1,531 @@
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+deleted file mode 100644
+--- a/.idea/encodings.xml	(revision 236e88229191b21c97c499efbccd9a8f53173037)
++++ /dev/null	(revision 236e88229191b21c97c499efbccd9a8f53173037)
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="Encoding">
+-    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+-    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+--- a/.idea/vcs.xml	(revision 236e88229191b21c97c499efbccd9a8f53173037)
++++ /dev/null	(revision 236e88229191b21c97c499efbccd9a8f53173037)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="VcsDirectoryMappings">
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: src/main/java/files/FileOrganizer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/files/FileOrganizer.java b/src/main/java/files/FileOrganizer.java
+new file mode 100644
+--- /dev/null	(date 1787830105128)
++++ b/src/main/java/files/FileOrganizer.java	(date 1787830105128)
+@@ -0,0 +1,32 @@
++package files;
++
++import config.ConfigLoader;
++import config.ConfigModel;
++
++import java.io.File;
++import java.util.Map;
++
++public class FileOrganizer {
++
++    public static String getCategoryForFile(File file) {
++
++        String name = file.getName();
++        int dotIndex = name.lastIndexOf('.');
++
++        if (dotIndex == -1) {
++            return "unknown";
++        }
++
++        String ext = name.substring(dotIndex + 1).toLowerCase();
++
++        ConfigModel config = ConfigLoader.loadConfig();
++
++        for (Map.Entry<String, java.util.List<String>> entry : config.getRules().entrySet()) {
++            if (entry.getValue().contains(ext)) {
++                return entry.getKey();
++            }
++        }
++
++        return "other";
++    }
++}
+Index: src/main/java/files/FileMover.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/files/FileMover.java b/src/main/java/files/FileMover.java
+new file mode 100644
+--- /dev/null	(date 1787830227006)
++++ b/src/main/java/files/FileMover.java	(date 1787830227006)
+@@ -0,0 +1,20 @@
++package files;
++
++import java.io.File;
++
++public class FileMover {
++
++    public static boolean moveFile(File file, String category) {
++
++        String userHome = System.getProperty("user.home");
++        File targetDir = new File(userHome + "/Downloads/" + category);
++
++        if (!targetDir.exists()) {
++            targetDir.mkdirs();
++        }
++
++        File targetFile = new File(targetDir, file.getName());
++
++        return file.renameTo(targetFile);
++    }
++}
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n\r\n    <groupId>com.emil</groupId>\r\n    <artifactId>downloads-organizer-java</artifactId>\r\n    <version>1.0-SNAPSHOT</version>\r\n\r\n    <properties>\r\n        <maven.compiler.source>25</maven.compiler.source>\r\n        <maven.compiler.target>25</maven.compiler.target>\r\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\r\n    </properties>\r\n\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision 236e88229191b21c97c499efbccd9a8f53173037)
++++ b/pom.xml	(date 1787833612360)
+@@ -2,6 +2,7 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++
+     <modelVersion>4.0.0</modelVersion>
+ 
+     <groupId>com.emil</groupId>
+@@ -14,4 +15,35 @@
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     </properties>
+ 
+-</project>
+\ No newline at end of file
++    <dependencies>
++
++        <!-- JSON handling (Jackson) -->
++        <dependency>
++            <groupId>com.fasterxml.jackson.core</groupId>
++            <artifactId>jackson-databind</artifactId>
++            <version>2.17.0</version>
++        </dependency>
++
++        <!-- Logging -->
++        <dependency>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-simple</artifactId>
++            <version>2.0.12</version>
++        </dependency>
++
++        <!-- Optional: FlatLaf for modern Swing UI -->
++        <dependency>
++            <groupId>com.formdev</groupId>
++            <artifactId>flatlaf</artifactId>
++            <version>3.4</version>
++        </dependency>
++
++        <dependency>
++            <groupId>com.formdev</groupId>
++            <artifactId>flatlaf-intellij-themes</artifactId>
++            <version>3.4</version>
++        </dependency>
++
++    </dependencies>
++
++</project>
+Index: src/main/java/files/FileScanner.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/files/FileScanner.java b/src/main/java/files/FileScanner.java
+new file mode 100644
+--- /dev/null	(date 1787829950850)
++++ b/src/main/java/files/FileScanner.java	(date 1787829950850)
+@@ -0,0 +1,30 @@
++package files;
++
++import java.io.File;
++import java.util.ArrayList;
++import java.util.List;
++
++public class FileScanner {
++
++    public static List<File> scanDownloads() {
++
++        String userHome = System.getProperty("user.home");
++        File downloads = new File(userHome + "/Downloads");
++
++        List<File> result = new ArrayList<>();
++
++        if (downloads.exists() && downloads.isDirectory()) {
++            File[] files = downloads.listFiles();
++
++            if (files != null) {
++                for (File f : files) {
++                    if (f.isFile()) {
++                        result.add(f);
++                    }
++                }
++            }
++        }
++
++        return result;
++    }
++}
+Index: src/main/java/gui/MainWindow.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/gui/MainWindow.java b/src/main/java/gui/MainWindow.java
+new file mode 100644
+--- /dev/null	(date 1787833709497)
++++ b/src/main/java/gui/MainWindow.java	(date 1787833709497)
+@@ -0,0 +1,43 @@
++package gui;
++
++import com.formdev.flatlaf.FlatLightLaf;
++import com.formdev.flatlaf.intellijthemes.FlatDraculaIJTheme;
++import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
++
++import javax.swing.*;
++import java.awt.*;
++
++public class MainWindow extends JFrame {
++
++    public MainWindow() {
++        setTitle("Downloads Organizer - Java Edition");
++        setSize(800, 600);
++        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
++        setLocationRelativeTo(null);
++
++        UIManager.put("TabbedPane.showTabSeparators", true);
++        UIManager.put("TabbedPane.tabSeparatorsFullHeight", true);
++        UIManager.put("TabbedPane.tabsOverlapBorder", true);
++
++        JTabbedPane tabs = new JTabbedPane();
++        LogPanel logPanel = new LogPanel();
++        CleanupPanel cleanupPanel = new CleanupPanel(logPanel);
++
++        tabs.addTab("Extensions", new ExtensionManagerPanel());
++        tabs.addTab("Cleanup", cleanupPanel);
++        tabs.addTab("Logs", logPanel);
++
++        add(tabs, BorderLayout.CENTER);
++    }
++
++    public static void main(String[] args) {
++
++        FlatOneDarkIJTheme.setup();
++
++        SwingUtilities.invokeLater(() -> {
++            MainWindow window = new MainWindow();
++            window.setVisible(true);
++
++        });
++    }
++}
+Index: src/main/java/config/ConfigModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/config/ConfigModel.java b/src/main/java/config/ConfigModel.java
+new file mode 100644
+--- /dev/null	(date 1787827322259)
++++ b/src/main/java/config/ConfigModel.java	(date 1787827322259)
+@@ -0,0 +1,25 @@
++package config;
++import java.util.List;
++import java.util.Map;
++
++public class ConfigModel {
++
++    private List<String> customExtensions;
++    private Map<String, List<String>> rules;
++
++    public List<String> getCustomExtensions() {
++        return customExtensions;
++    }
++
++    public void setCustomExtensions(List<String> customExtensions) {
++        this.customExtensions = customExtensions;
++    }
++
++    public Map<String, List<String>> getRules() {
++        return rules;
++    }
++
++    public void setRules(Map<String, List<String>> rules) {
++        this.rules = rules;
++    }
++}
+Index: src/main/java/gui/ExtensionManagerPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/gui/ExtensionManagerPanel.java b/src/main/java/gui/ExtensionManagerPanel.java
+new file mode 100644
+--- /dev/null	(date 1787831160050)
++++ b/src/main/java/gui/ExtensionManagerPanel.java	(date 1787831160050)
+@@ -0,0 +1,84 @@
++package gui;
++
++import config.ConfigLoader;
++import config.ConfigModel;
++
++import javax.swing.*;
++import java.awt.*;
++import java.util.List;
++import java.util.stream.*;
++
++public class ExtensionManagerPanel extends JPanel {
++
++    private JComboBox<String> extensionDropdown;
++    private JTextField customExtensionField;
++    private DefaultListModel<String> extensionListModel;
++    private JList<String> extensionList;
++
++    public ExtensionManagerPanel() {
++
++        ConfigModel config = ConfigLoader.loadConfig();
++
++        setLayout(new BorderLayout());
++
++        // Lista extensiilor active
++        extensionListModel = new DefaultListModel<>();
++        extensionList = new JList<>(extensionListModel);
++
++        for (String ext : config.getCustomExtensions()) {
++            extensionListModel.addElement(ext);
++        }
++
++        // 3. Dropdown generat din config.json
++        extensionDropdown = new JComboBox<>(
++                config.getRules().values()
++                        .stream()
++                        .flatMap(List::stream)
++                        .distinct()
++                        .sorted()
++                        .toArray(String[]::new)
++        );
++
++
++        // Text field pentru extensii custom
++        customExtensionField = new JTextField();
++        customExtensionField.setToolTipText("Add custom extension (e.g., apk, csv, jar)");
++
++        JButton addButton = new JButton("Add Extension");
++        JButton removeButton = new JButton("Remove Selected");
++
++        addButton.addActionListener(e -> {
++            String ext = customExtensionField.getText().trim();
++
++            if (ext.isEmpty()) {
++                ext = (String) extensionDropdown.getSelectedItem();
++            }
++
++            if (!ext.isEmpty()) {
++                extensionListModel.addElement(ext);
++                customExtensionField.setText("");
++
++                // Salvăm în config.json
++                config.getCustomExtensions().add(ext);
++                ConfigLoader.saveConfig(config);
++            }
++        });
++
++        removeButton.addActionListener(e -> {
++            String selected = extensionList.getSelectedValue();
++            if (selected != null) {
++                extensionListModel.removeElement(selected);
++            }
++        });
++
++        // Layout GUI
++        JPanel topPanel = new JPanel(new GridLayout(3, 1));
++        topPanel.add(extensionDropdown);
++        topPanel.add(customExtensionField);
++        topPanel.add(addButton);
++
++        add(topPanel, BorderLayout.NORTH);
++        add(new JScrollPane(extensionList), BorderLayout.CENTER);
++        add(removeButton, BorderLayout.SOUTH);
++    }
++}
+Index: src/main/java/gui/CleanupPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/gui/CleanupPanel.java b/src/main/java/gui/CleanupPanel.java
+new file mode 100644
+--- /dev/null	(date 1787832588106)
++++ b/src/main/java/gui/CleanupPanel.java	(date 1787832588106)
+@@ -0,0 +1,42 @@
++package gui;
++
++import files.FileScanner;
++import files.FileOrganizer;
++import files.FileMover;
++
++import javax.swing.*;
++import java.awt.*;
++import java.io.File;
++import java.util.List;
++
++public class CleanupPanel extends JPanel {
++
++    private LogPanel logPanel;
++
++    public CleanupPanel(LogPanel logPanel) {
++        this.logPanel = logPanel;
++        setLayout(new BorderLayout());
++
++        JButton runCleanup = new JButton("Run Cleanup");
++        JTextArea output = new JTextArea();
++        output.setEditable(false);
++
++        runCleanup.addActionListener(e -> {
++
++            output.append("Scanning Downloads...\n");
++
++            List<File> files = FileScanner.scanDownloads();
++
++            for (File f : files) {
++                String category = FileOrganizer.getCategoryForFile(f);
++                boolean moved = FileMover.moveFile(f, category);
++                logPanel.appendLog(f.getName() + " → " + category + " : " + (moved ? "OK" : "FAILED") + "\n");
++            }
++
++            output.append("Cleanup completed.\n");
++        });
++
++        add(runCleanup, BorderLayout.NORTH);
++        add(new JScrollPane(output), BorderLayout.CENTER);
++    }
++}
+\ No newline at end of file
+Index: src/main/java/gui/LogPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/gui/LogPanel.java b/src/main/java/gui/LogPanel.java
+new file mode 100644
+--- /dev/null	(date 1787832434219)
++++ b/src/main/java/gui/LogPanel.java	(date 1787832434219)
+@@ -0,0 +1,27 @@
++package gui;
++import javax.swing.*;
++import java.awt.*;
++
++public class LogPanel extends JPanel {
++
++    private JTextArea logArea;
++
++    public LogPanel() {
++        setLayout(new BorderLayout());
++
++        logArea = new JTextArea();
++        logArea.setEditable(false);
++
++        JButton clearButton = new JButton("Clear Log");
++        clearButton.addActionListener(e -> logArea.setText(""));
++
++        add(new JScrollPane(logArea), BorderLayout.CENTER);
++        add(clearButton, BorderLayout.SOUTH);
++        add(new JScrollPane(logArea), BorderLayout.CENTER);
++    }
++
++    public void appendLog(String text) {
++        logArea.append(text + "\n");
++    }
++}
++
+Index: src/main/java/config/ConfigLoader.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/config/ConfigLoader.java b/src/main/java/config/ConfigLoader.java
+new file mode 100644
+--- /dev/null	(date 1787831050237)
++++ b/src/main/java/config/ConfigLoader.java	(date 1787831050237)
+@@ -0,0 +1,43 @@
++package config;
++
++import com.fasterxml.jackson.databind.ObjectMapper;
++
++import java.io.File;
++import java.io.InputStream;
++
++public class ConfigLoader {
++
++    private static ConfigModel config;
++
++    public static ConfigModel loadConfig() {
++        if (config != null) {
++            return config;
++        }
++
++        try {
++            ObjectMapper mapper = new ObjectMapper();
++            InputStream is = ConfigLoader.class.getClassLoader().getResourceAsStream("config.json");
++
++            if (is == null) {
++                throw new RuntimeException("config.json not found in resources!");
++            }
++
++            config = mapper.readValue(is, ConfigModel.class);
++            return config;
++
++        } catch (Exception ex) {
++            throw new RuntimeException("Failed to load config.json: " + ex.getMessage(), ex);
++        }
++    }
++
++    public static void saveConfig(ConfigModel config) {
++        try {
++            ObjectMapper mapper = new ObjectMapper();
++            mapper.writerWithDefaultPrettyPrinter()
++                    .writeValue(new File("src/main/resources/config.json"), config);
++        } catch (Exception ex) {
++            throw new RuntimeException("Failed to save config.json: " + ex.getMessage(), ex);
++        }
++    }
++
++}
+diff --git a/src/main/java/config/config.json b/src/main/resources/config.json
+rename from src/main/java/config/config.json
+rename to src/main/resources/config.json
