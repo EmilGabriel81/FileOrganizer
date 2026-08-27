@@ -5,16 +5,27 @@ import java.io.File;
 public class FileMover {
 
     public static boolean moveFile(File file, String category) {
+        try {
+            File downloads = FileScanner.getDownloadsFolder();
+            File targetDir = new File(downloads, category);
 
-        String userHome = System.getProperty("user.home");
-        File targetDir = new File(userHome + "/Downloads/" + category);
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
+            }
 
-        if (!targetDir.exists()) {
-            targetDir.mkdirs();
+            File targetFile = new File(targetDir, file.getName());
+
+            boolean ok = file.renameTo(targetFile);
+
+            if (ok) {
+                UndoHistory.add(file, targetFile);
+            }
+
+            return ok;
+
+        } catch (Exception ex) {
+            return false;
         }
-
-        File targetFile = new File(targetDir, file.getName());
-
-        return file.renameTo(targetFile);
     }
+
 }

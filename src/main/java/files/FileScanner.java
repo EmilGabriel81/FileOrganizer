@@ -27,4 +27,10 @@ public class FileScanner {
 
         return result;
     }
+
+    public static File getDownloadsFolder() {
+        String userHome = System.getProperty("user.home");
+        return new File(userHome + "/Downloads");
+    }
+
 }
