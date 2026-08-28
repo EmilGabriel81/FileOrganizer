@@ -1,10 +1,13 @@
 {
-  "customExtensions": [],
-  "rules": {
-    "archives": ["zip", "rar", "7z"],
-    "documents": ["pdf", "docx", "txt"],
-    "images": ["png", "jpg", "jpeg"],
-    "videos": ["mp4", "mkv"],
-    "torrents": ["torrent"]
+  "cleanupFolder" : "C:\\Users\\Microsoft\\Downloads",
+  "ignoreLargerThanMB" : 0,
+  "ignoreRecentHours" : 0,
+  "customExtensions" : [ "docx" ],
+  "rules" : {
+    "documents" : [ "pdf", "docx", "txt" ],
+    "images" : [ "png", "jpg" ],
+    "archives" : [ "zip", "rar" ],
+    "videos" : [ "mp4", "mkv" ],
+    "other" : [ ]
   }
 }
