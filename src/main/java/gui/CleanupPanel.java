@@ -27,6 +27,7 @@ public class CleanupPanel extends JPanel {
         JButton previewCleanup = new JButton("Preview Cleanup");
         JButton undoCleanup = new JButton("Undo Last Cleanup");
 
+
         JTextArea output = new JTextArea();
         output.setEditable(false);
 
@@ -89,6 +90,20 @@ public class CleanupPanel extends JPanel {
             output.append("Cleanup completed.\n");
         });
 
+        previewCleanup.addActionListener(e -> {
+
+            output.append("Previewing Downloads...\n");
+
+            List<File> files = FileScanner.scanDownloads();
+
+            for (File f : files) {
+                String category = FileOrganizer.getCategoryForFile(f);
+                logPanel.appendLog(f.getName() + " → " + category + " (preview)");
+            }
+
+            output.append("Preview completed.\n");
+        });
+
         undoCleanup.addActionListener(e -> {
 
             List<UndoHistory.MoveEntry> entries = UndoHistory.getHistory();
@@ -103,11 +118,10 @@ public class CleanupPanel extends JPanel {
                 File moved = entry.moved;
 
                 File restored = new File(original.getParent(), original.getName());
+
                 boolean ok = moved.renameTo(restored);
 
-                logPanel.appendLog(
-                        moved.getName() + " ← restored to " + original.getParent() + " : " + (ok ? "OK" : "FAILED") + "\n"
-                );
+                logPanel.appendLog(moved.getName() + " ← restored to " + original.getParent() + " : " + (ok ? "OK" : "FAILED"));
             }
 
             UndoHistory.clear();

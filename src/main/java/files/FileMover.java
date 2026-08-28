@@ -8,8 +8,8 @@ public class FileMover {
 
     public static boolean moveFile(File file, String category) {
         try {
-            File cleanupFolder = new File(ConfigLoader.loadConfig().getCleanupFolder());
-            File targetDir = new File(cleanupFolder, category);
+            File downloads = FileScanner.getDownloadsFolder();
+            File targetDir = new File(downloads, category);
 
             if (!targetDir.exists()) {
                 targetDir.mkdirs();
@@ -20,7 +20,7 @@ public class FileMover {
             boolean ok = file.renameTo(targetFile);
 
             if (ok) {
-                UndoHistory.add(file, targetFile);   // ← ESENȚIAL
+                UndoHistory.add(file, targetFile);
             }
 
             return ok;
