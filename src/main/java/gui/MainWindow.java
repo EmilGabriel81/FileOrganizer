@@ -26,6 +26,7 @@ public class MainWindow extends JFrame {
         tabs.addTab("Extensions", new ExtensionManagerPanel());
         tabs.addTab("Cleanup", cleanupPanel);
         tabs.addTab("Logs", logPanel);
+        tabs.addTab("Settings", new SettingsPanel());
 
         add(tabs, BorderLayout.CENTER);
     }
